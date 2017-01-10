@@ -11,4 +11,6 @@ type FortyTwoCmdlet() =
     member val Radius : float = 0.0 with get, set
 
     override this.ProcessRecord() =
-       System.Math.PI * pown this.Radius 2 |> this.WriteObject
+        this.Radius ** 2.0
+            |> (*) System.Math.PI
+            |> this.WriteObject
