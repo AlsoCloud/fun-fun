@@ -2,6 +2,16 @@ namespace FunFun
 
 open System.Management.Automation
 
+type Tone =
+    | Idi
+    | Vnimanije
+    | Stoj
+
+type Luxofor =
+    | RedGreen of int * Tone
+    | YellowYellow of int * Tone
+    | GreenRed of int * Tone
+
 
 [<Cmdlet(VerbsCommon.Get,"Fun")>]
 type FortyTwoCmdlet() = 
@@ -11,4 +21,10 @@ type FortyTwoCmdlet() =
     member val Radius : float = 0.0 with get, set
 
     override this.ProcessRecord() =
-       System.Math.PI * pown this.Radius 2 |> this.WriteObject
+        let mutable state = GreenRed (10, Idi)
+        do state <-
+            match state with
+                | RedGreen (seconds, tone) -> YellowYellow (5, toneState tone)
+                | YellowYellow (seconds, tone) -> GreenRed
+                | _ -> RedGreen
+        state |> this.WriteObject
